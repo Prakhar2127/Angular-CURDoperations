@@ -9,7 +9,7 @@ npm install -g @angular/cli
 
 - Then install angular material for the UI component
 ```
-ng install @angular/mateiral
+npm install @angular/mateiral
 ```
 
 - Then create a new project
