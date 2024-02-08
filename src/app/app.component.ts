@@ -20,34 +20,36 @@ export interface ShopTable {
   action: string
 }
 
-const SHOP_DATA: ShopTable[] = [
-  {sNo: 1, shopName: 'Hydra Man', shopId: 2467, shopDetails: 'Water solutions', contactNo: 9352169480, estd: '12/03/2005', country: 'Iran', action: ''},
-  {sNo: 2, shopName: 'Raymonds Store', shopId: 4218, shopDetails: 'Clothing Store', contactNo: 6598541203, estd: '12/05/2009', country: 'China', action: ''},
-  
-];
-
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, MatFormFieldModule],
+  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, MatFormFieldModule, ShopAddEditComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'shop-app';
 
-  constructor(private _dialog: MatDialog) {}
+  constructor(private _dialog: MatDialog) {
+  }
 
   openAddEditShopForm() {
     this._dialog.open(ShopAddEditComponent);
   }
 
   displayedColumns: string[] = ['sNo', 'shopName', 'shopId', 'shopDetails','contactNo','estd','country', 'action'];
-  dataSource = new MatTableDataSource(SHOP_DATA);
+  dataSource = new MatTableDataSource<any>;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  
+
+  onChildClick(array: string[]) {
+    //console.log(array);
+    this.dataSource = new MatTableDataSource(array);
+    localStorage.setItem('myData',JSON.stringify(array));
+    const shopData = JSON.parse(localStorage.getItem('myData') as string);
+    console.log(shopData);
+  }
 }
