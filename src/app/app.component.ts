@@ -12,7 +12,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, MatFormFieldModule, ShopAddEditComponent],
+  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, 
+            MatFormFieldModule, ShopAddEditComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -26,12 +27,13 @@ export class AppComponent {
     this._dialog.open(ShopAddEditComponent);
   }
 
-  shopData: any[] = [];
+  shopData: any;
   ngOnInit() {
     try {
       const data = localStorage.getItem('myData');
       if(data) {
         this.shopData = JSON.parse(data); 
+        
       } else {
         console.error("No shop data found in local storage");
       }
