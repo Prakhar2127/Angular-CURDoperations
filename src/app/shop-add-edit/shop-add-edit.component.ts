@@ -27,8 +27,6 @@ interface Country {
 
 export class ShopAddEditComponent {
 
-  //@Output() clickEvent = new EventEmitter<string[]>();
-
   shopForm: FormGroup;  
 
   countries: Country[] = [
@@ -40,7 +38,6 @@ export class ShopAddEditComponent {
 
   constructor(private _fb: FormBuilder, private dialog: MatDialog) {
     this.shopForm = this._fb.group ({
-      sNo: 0,
       shopName: '',
       shopId: '',
       shopDetails: '',
@@ -50,16 +47,17 @@ export class ShopAddEditComponent {
     });
   };
 
-  //shopArr: any[] = [];
+  //shopArr: any;
 
   onFormSubmit() {
     if(this.shopForm.valid) {
-      //this.shopArr.push(this.shopForm);
+      //this.shopArr.push(this.shopForm.value);
       //this.clickEvent.emit(this.shopForm.value());
       localStorage.setItem('myData',JSON.stringify(this.shopForm.value));
       //const shopData = JSON.parse(localStorage.getItem('myData') as string);
       //this.shopArr = shopData;
       //console.log(this.shopArr);
+      this.dialog.closeAll();
 
     }
   }
