@@ -1,4 +1,4 @@
-import { Component,Output } from '@angular/core';
+import { Component,Output, EventEmitter } from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -24,7 +24,10 @@ interface Country {
   styleUrl: './shop-add-edit.component.css',
   providers: [provideNativeDateAdapter()],
 })
+
 export class ShopAddEditComponent {
+
+  //@Output() clickEvent = new EventEmitter<string[]>();
 
   shopForm: FormGroup;  
 
@@ -35,8 +38,9 @@ export class ShopAddEditComponent {
     {value: 'nepal-977', viewValue: 'Nepal'},
   ];
 
-  constructor(private _fb: FormBuilder, private dialog: MatDialog ) {
+  constructor(private _fb: FormBuilder, private dialog: MatDialog) {
     this.shopForm = this._fb.group ({
+      sNo: 0,
       shopName: '',
       shopId: '',
       shopDetails: '',
@@ -46,13 +50,16 @@ export class ShopAddEditComponent {
     });
   };
 
-  shopArr: any[]=[];
+  //shopArr: any[] = [];
 
   onFormSubmit() {
     if(this.shopForm.valid) {
+      //this.shopArr.push(this.shopForm);
+      //this.clickEvent.emit(this.shopForm.value());
       localStorage.setItem('myData',JSON.stringify(this.shopForm.value));
-      const shopData = JSON.parse(localStorage.getItem('myData') as string);
-      console.log(shopData);
+      //const shopData = JSON.parse(localStorage.getItem('myData') as string);
+      //this.shopArr = shopData;
+      //console.log(this.shopArr);
 
     }
   }
@@ -60,5 +67,4 @@ export class ShopAddEditComponent {
   closeDialog() {
     this.dialog.closeAll();
   }
-
 }
