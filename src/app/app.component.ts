@@ -5,22 +5,25 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ShopAddEditComponent } from './shop-add-edit/shop-add-edit.component';
-import {MatTableModule,} from '@angular/material/table';
+import {MatTableModule,MatTableDataSource} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { Shop } from './shop';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, 
-            MatFormFieldModule, ShopAddEditComponent, DatePipe],
+            MatFormFieldModule, ShopAddEditComponent, DatePipe, NgIf, NgFor],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent{
   title = 'shop-app';
+
+  shopData: Shop[] = [];
 
   constructor(private _dialog: MatDialog, ) {
   }
@@ -29,14 +32,32 @@ export class AppComponent{
     this._dialog.open(ShopAddEditComponent);
   }
 
-  shopData: any;
+  addShop(newShop: Shop) {
+    this.shopData.push(newShop);
+    this.updateLocalStorage();
+  }
+
+  updateShop(updatedShop: Shop) {
+    const index = this.shopData.findIndex(shop => shop.shopId === updatedShop.shopId);
+    if (index !== -1) {
+      this.shopData[index] = updatedShop;
+      this.updateLocalStorage();
+    }
+  }
+
+  deleteShop(shopId: string) {
+    this.shopData = this.shopData.filter(shop => shop.shopId !== shopId);
+    this.updateLocalStorage();
+  }
+  
   //shopData: any[] = [];
-  displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
+  //displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
+  
   ngOnInit() {
     try {
       const data = localStorage.getItem('myData');
       if(data) {
-        this.shopData = JSON.parse(data); 
+        this.shopData = JSON.parse(data) as Shop[]; 
         console.log(this.shopData);
       } else {
         console.error("No shop data found in local storage");
@@ -44,6 +65,9 @@ export class AppComponent{
     }catch(error) {
       console.error("Error parsing shopdata:",error);
     }
+  }
+  private updateLocalStorage() {
+    localStorage.setItem('myData', JSON.stringify(this.shopData));
   }
   // openAddEditShopForme(shop?: any) {
   //   this._dialog.open(ShopAddEditComponent, { data: shop });
