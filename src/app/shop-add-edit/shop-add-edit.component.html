@@ -40,7 +40,7 @@
         <mat-form-field>
             <mat-label>Country</mat-label>
             <mat-select formControlName="country">
-              @for (country of countries; track country) {
+              @for (country of countries; track country.value) {
                 <mat-option [value]="country.value">{{country.viewValue}}</mat-option>
               }
             </mat-select>
@@ -49,7 +49,7 @@
     </div>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button>Cancel</button>
-    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <button mat-raised-button (click)="closeDialog()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" >Submit</button>
 </div>
 </form>
