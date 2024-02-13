@@ -8,32 +8,62 @@ import { ShopAddEditComponent } from './shop-add-edit/shop-add-edit.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { DatePipe, NgFor } from '@angular/common';
+import { Shop } from './shop';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatInputModule, 
-            MatFormFieldModule, ShopAddEditComponent],
+            MatFormFieldModule, ShopAddEditComponent, DatePipe, NgFor],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent{
   title = 'shop-app';
 
+  shopData: Shop[] = [];
+  //shopArr: shopObj [];
+
   constructor(private _dialog: MatDialog, ) {
+    //this.shopArr = [];
   }
 
   openAddEditShopForm() {
     this._dialog.open(ShopAddEditComponent);
   }
 
-  shopData: any;
+  addShop(newShop: Shop) {
+    this.shopData.push(newShop);
+    this.updateLocalStorage();
+  }
+
+  updateShop(updatedShop: Shop) {
+    const index = this.shopData.findIndex(shop => shop.shopId === updatedShop.shopId);
+    if (index !== -1) {
+      this.shopData[index] = updatedShop;
+      this.updateLocalStorage();
+    }
+  }
+
+  deleteShop(shopId: string) {
+    this.shopData = this.shopData.filter(shop => shop.shopId !== shopId);
+    this.updateLocalStorage();
+  }
+  shopArr: any[] = [];
+  
+  //shopData: any[] = [];
+  //displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
+  
   ngOnInit() {
     try {
       const data = localStorage.getItem('myData');
       if(data) {
         this.shopData = JSON.parse(data); 
-        
+        //console.log(this.shopData); 
+        this.shopArr.push(this.shopData);
+        console.log(this.shopArr);
       } else {
         console.error("No shop data found in local storage");
       }
@@ -41,4 +71,34 @@ export class AppComponent {
       console.error("Error parsing shopdata:",error);
     }
   }
+  private updateLocalStorage() {
+    localStorage.setItem('myData', JSON.stringify(this.shopData));
+  }
+  
+
+  // openAddEditShopForme(shop?: any) {
+  //   this._dialog.open(ShopAddEditComponent, { data: shop });
+  // }
+
+  // addShop(shop: any) {
+  //   this.shopData.push(shop);
+  //   this.saveToLocalStorage();
+  // }
+
+  // editShop(shop: any) {
+  //   const index = this.shopData.findIndex((s) => s.shopId === shop.shopId);
+  //   this.shopData[index] = shop;
+  //   this.saveToLocalStorage();
+  // }
+
+  // deleteShop(shop: any) {
+  //   const index = this.shopData.findIndex((s) => s.shopId === shop.shopId);
+  //   this.shopData.splice(index, 1);
+  //   this.saveToLocalStorage();
+  // }
+
+  // saveToLocalStorage() {
+  //   localStorage.setItem('myData', JSON.stringify(this.shopData));
+  // }
+  
 }
