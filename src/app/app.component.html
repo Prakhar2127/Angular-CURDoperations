@@ -6,7 +6,7 @@
   </button>
 </mat-toolbar>
 <div>
-<table>
+ <table>
   <tr>
     <th>S.No.</th>
     <th>Shop Name</th>
@@ -15,16 +15,86 @@
     <th>Contact No.</th>
     <th>Established From</th>
     <th>Country</th>
+    <th>Action</th>
   </tr>
-  <tr>
-    <td></td>
-    <td>{{shopData.shopName}}</td>
-    <td>{{shopData.shopId}}</td>
-    <td>{{shopData.shopDetails}}</td>
-    <td>{{shopData.contactNo}}</td>
-    <td>{{shopData.estd}}</td>
-    <td>{{shopData.country}}</td>
+  <tr *ngFor="let shop of shopArr; let i = index">
+    <td>{{i+1}}</td>
+    <td>{{shop.shopName}}</td>
+    <td>{{shop.shopId}}</td>
+    <td>{{shop.shopDetails}}</td>
+    <td>{{shop.contactNo}}</td>
+    <td>{{shop.estd | date}}</td>
+    <td>{{shop.country}}</td>
+    <td>
+        <button mat-iocn-button color="primary" (click)="updateShop(shop)">
+        <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteShop(shop.shopId)">
+        <mat-icon>delete</mat-icon>
+        </button>
+    </td>
   </tr>
 </table>
 </div>
+<!-- *ngIf="shopData.length > 0" -->
+<!-- <div >
+  <table mat-table [dataSource]="shopData" matSort>
+    <ng-container matColumnDef="sno">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>S.No.</th>
+      <td mat-cell *matCellDef="let element; let i = index;">{{ i + 1 }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="shopName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Shop Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.shopName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="shopId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Shop ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.shopId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="shopDetails">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Shop Details</th>
+      <td mat-cell *matCellDef="let element">{{ element.shopDetails }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="contactNo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact No.</th>
+      <td mat-cell *matCellDef="let element">{{ element.contactNo }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="estd">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Established From</th>
+      <td mat-cell *matCellDef="let element">{{ element.estd | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+      <td mat-cell *matCellDef="let element">{{ element.country }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="openAddEditShopForme(element)" color="primary">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteShop(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<div *ngIf="shopData.length === 0">
+  <p>No shop data found in local storage.</p>
+</div> -->
+
+
+
 
