@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ShopAddEditComponent } from './shop-add-edit/shop-add-edit.component';
-import {MatTableModule} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { DatePipe, NgFor } from '@angular/common';
@@ -24,81 +24,68 @@ export class AppComponent{
   title = 'shop-app';
 
   shopData: Shop[] = [];
-  //shopArr: shopObj [];
 
   constructor(private _dialog: MatDialog, ) {
-    //this.shopArr = [];
+    
   }
 
-  openAddEditShopForm() {
+  openAddEditShopForm(shop?: Shop) {
     this._dialog.open(ShopAddEditComponent);
+    data: shop;
   }
 
-  addShop(newShop: Shop) {
-    this.shopData.push(newShop);
-    this.updateLocalStorage();
-  }
-
-  updateShop(updatedShop: Shop) {
-    const index = this.shopData.findIndex(shop => shop.shopId === updatedShop.shopId);
-    if (index !== -1) {
-      this.shopData[index] = updatedShop;
-      this.updateLocalStorage();
-    }
-  }
-
-  deleteShop(shopId: string) {
-    this.shopData = this.shopData.filter(shop => shop.shopId !== shopId);
-    this.updateLocalStorage();
-  }
   shopArr: any[] = [];
-  
-  //shopData: any[] = [];
-  //displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
   
   ngOnInit() {
     try {
       const data = localStorage.getItem('myData');
+      const localData = localStorage.getItem('shoplist');
       if(data) {
         this.shopData = JSON.parse(data); 
-        //console.log(this.shopData); 
-        this.shopArr.push(this.shopData);
-        console.log(this.shopArr);
+        //console.log(this.shopArr);
+        this.addShop(this.shopData);
       } else {
         console.error("No shop data found in local storage");
+      }
+      if(localData != null) {
+        this.shopArr = JSON.parse(localData);
+        this.addShop(this.shopData);
       }
     }catch(error) {
       console.error("Error parsing shopdata:",error);
     }
   }
-  private updateLocalStorage() {
-    localStorage.setItem('myData', JSON.stringify(this.shopData));
+  addShop(newShop: any) {
+    this.shopArr.push(newShop);
+    this.updateLocalStorage();
   }
-  
 
-  // openAddEditShopForme(shop?: any) {
-  //   this._dialog.open(ShopAddEditComponent, { data: shop });
-  // }
+  updateShop(updatedShop: Shop) {
+    const index = this.shopArr.findIndex(shop => shop.shopId === updatedShop.shopId);
+    if (index !== -1) {
+      this.shopArr[index] = updatedShop;
+      this.openAddEditShopForm(updatedShop);
+      this.updateLocalStorage();
+    }
+    //this.openAddEditShopForm(updatedShop);
+  }
 
-  // addShop(shop: any) {
-  //   this.shopData.push(shop);
-  //   this.saveToLocalStorage();
-  // }
+  deleteShop(shopId: string) {
+    this.shopArr = this.shopArr.filter(shop => shop.shopId !== shopId);
+    this.updateLocalStorage();
+  }
 
-  // editShop(shop: any) {
-  //   const index = this.shopData.findIndex((s) => s.shopId === shop.shopId);
-  //   this.shopData[index] = shop;
-  //   this.saveToLocalStorage();
-  // }
+  updateLocalStorage() {
+    localStorage.setItem('shoplist', JSON.stringify(this.shopArr));
+    this.dataSource.data = this.shopArr;
+  }
 
-  // deleteShop(shop: any) {
-  //   const index = this.shopData.findIndex((s) => s.shopId === shop.shopId);
-  //   this.shopData.splice(index, 1);
-  //   this.saveToLocalStorage();
-  // }
+  displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
+  dataSource = new MatTableDataSource(this.shopArr);
 
-  // saveToLocalStorage() {
-  //   localStorage.setItem('myData', JSON.stringify(this.shopData));
-  // }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   
 }
