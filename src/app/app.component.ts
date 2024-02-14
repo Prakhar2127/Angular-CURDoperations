@@ -34,7 +34,7 @@ export class AppComponent{
     data: shop;
   }
 
-  shopArr: any[] = [];
+  shopArr: any  [] = [];
   
   ngOnInit() {
     try {
@@ -48,13 +48,23 @@ export class AppComponent{
         console.error("No shop data found in local storage");
       }
       if(localData != null) {
-        this.shopArr = JSON.parse(localData);
-        this.addShop(this.shopData);
+        const localShopArr: any[] = JSON.parse(localData); 
+        localShopArr.forEach((shop: any) => { 
+          const existingShop = this.shopArr.find(s => s.shopId === shop.shopId);
+          if (!existingShop) {
+            this.shopArr.push(shop);
+          }
+        });
+        this.updateLocalStorage();
+        //this.shopArr = JSON.parse(localData);
+        //this.addShop(this.shopData);
       }
     }catch(error) {
       console.error("Error parsing shopdata:",error);
     }
   }
+  
+  
   addShop(newShop: any) {
     this.shopArr.push(newShop);
     this.updateLocalStorage();
