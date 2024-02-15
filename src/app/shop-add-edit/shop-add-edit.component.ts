@@ -64,14 +64,9 @@ export class ShopAddEditComponent{
 
   onFormSubmit() {
     if(this.shopForm.valid) {
-      //this.shopArr.push(this.shopForm);
-      //this.clickEvent.emit(this.shopForm.value());
       localStorage.setItem('myData',JSON.stringify(this.shopForm.value));
-      //const shopData = JSON.parse(localStorage.getItem('myData') as string);
-      //this.shopArr = shopData;
-      //console.log(this.shopArr);
       this.dialog.closeAll();
-
+      window.location.reload();
     }
   }
 
