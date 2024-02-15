@@ -25,16 +25,27 @@ export class AppComponent{
 
   shopData: Shop[] = [];
 
+  displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
+  dataSource: MatTableDataSource<Shop>;
+
   constructor(private _dialog: MatDialog, ) {
-    
+      this.dataSource = new MatTableDataSource(this.shopArr);
   }
 
   openAddEditShopForm(shop?: Shop) {
-    this._dialog.open(ShopAddEditComponent);
-    data: shop;
+    const dialogRef = this._dialog.open(ShopAddEditComponent, {
+      data: shop 
+    });
+  
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateShop(result);
+      }
+    });
   }
 
-  shopArr: any  [] = [];
+  shopArr:   Shop[] = [];
   
   ngOnInit() {
     try {
@@ -64,6 +75,10 @@ export class AppComponent{
     }
   }
   
+  updateLocalStorage() {
+    localStorage.setItem('shoplist', JSON.stringify(this.shopArr));
+    this.dataSource.data = this.shopArr;
+  }
   
   addShop(newShop: any) {
     this.shopArr.push(newShop);
@@ -82,16 +97,9 @@ export class AppComponent{
 
   deleteShop(shopId: string) {
     this.shopArr = this.shopArr.filter(shop => shop.shopId !== shopId);
+    localStorage.removeItem('myData');
     this.updateLocalStorage();
   }
-
-  updateLocalStorage() {
-    localStorage.setItem('shoplist', JSON.stringify(this.shopArr));
-    this.dataSource.data = this.shopArr;
-  }
-
-  displayedColumns: string[] = ['sno', 'shopName', 'shopId', 'shopDetails', 'contactNo', 'estd', 'country', 'action'];
-  dataSource = new MatTableDataSource(this.shopArr);
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
