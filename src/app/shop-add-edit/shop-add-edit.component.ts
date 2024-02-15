@@ -1,14 +1,15 @@
-import { Component,Output, EventEmitter } from '@angular/core';
+import { Component, Inject} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog, MatDialogModule, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Shop } from '../shop';
 
 interface Country {
   value: string;
@@ -25,7 +26,7 @@ interface Country {
   providers: [provideNativeDateAdapter()],
 })
 
-export class ShopAddEditComponent {
+export class ShopAddEditComponent{
 
   shopForm: FormGroup;  
 
@@ -36,7 +37,18 @@ export class ShopAddEditComponent {
     {value: 'nepal-977', viewValue: 'Nepal'},
   ];
 
-  constructor(private _fb: FormBuilder, private dialog: MatDialog) {
+  constructor(private _fb: FormBuilder, private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: Shop) {
+    if(data) {
+      this.shopForm = this._fb.group({
+        shopName: [data.shopName],
+        shopId: [data.shopId],
+        shopDetails: [data.shopDetails],
+        contactNo: [data.contactNo],
+        estd: [data.estd],
+        country: [data.country]
+      });
+    }
+    else {
     this.shopForm = this._fb.group ({
       shopName: '',
       shopId: '',
@@ -45,13 +57,14 @@ export class ShopAddEditComponent {
       estd: '',
       country: ''
     });
+  }
   };
 
-  //shopArr: any;
+  //shopArr: any[] = [];
 
   onFormSubmit() {
     if(this.shopForm.valid) {
-      //this.shopArr.push(this.shopForm.value);
+      //this.shopArr.push(this.shopForm);
       //this.clickEvent.emit(this.shopForm.value());
       localStorage.setItem('myData',JSON.stringify(this.shopForm.value));
       //const shopData = JSON.parse(localStorage.getItem('myData') as string);
