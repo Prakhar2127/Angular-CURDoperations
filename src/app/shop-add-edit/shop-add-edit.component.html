@@ -1,0 +1,57 @@
+<div mat-dialog-title>
+    <h1>Shop Details</h1>
+</div>
+<form [formGroup]="shopForm" (ngSubmit)="onFormSubmit()">
+<div mat-dialog-content>
+    <div>
+    <mat-form-field>
+        <mat-label for="shopName">Shop Name</mat-label>
+        <input matInput type="text" formControlName="shopName" id="shopName">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label for="shopId">Shop ID</mat-label>
+        <input matInput type="number" formControlName="shopId" id="shopId">
+        <mat-hint>Shop ID length: 4</mat-hint>
+      </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label for="shopDetails">Shop Details</mat-label>
+            <textarea matInput formControlName="shopDetails" id="shopDetails"></textarea>
+          </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+          <mat-label for="contactNo">Contact Number</mat-label>
+          <input matInput type="text" formControlName="contactNo" id="contactNo">
+          <mat-hint>Min-Max Length 10</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label for="estd">Established From</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="estd" id="estd">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label for="country">Country</mat-label>
+            <mat-select formControlName="country" id="country">
+              @for (country of countries; track country.value) {
+                <mat-option [value]="country.value">{{country.viewValue}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          
+    </div>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button (click)="closeDialog()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" >Submit</button>
+</div>
+</form>
